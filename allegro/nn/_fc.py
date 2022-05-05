@@ -80,7 +80,7 @@ class ScalarMLPFunction(CodeGenMixin, torch.nn.Module):
         super().__init__()
         nonlinearity = {
             None: None,
-            "silu": torch.nn.functional.silu,
+            "silu": torch.nn.SiLU(),
             "ssp": ShiftedSoftPlus,
         }[mlp_nonlinearity]
         if nonlinearity is not None:

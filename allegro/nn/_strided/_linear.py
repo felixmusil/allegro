@@ -1,3 +1,4 @@
+from turtle import forward
 from typing import List, Optional, Tuple, NamedTuple
 from math import sqrt
 
@@ -166,7 +167,6 @@ def codegen_strided_linear(
     graphmod_out = fx.GraphModule(
         constants_root, graph_out, class_name="linear_forward"
     )
-
     if True:  # optimize_einsums
         # Note that for our einsums, we can optimize _once_ for _any_ batch dimension
         # and still get the right path for _all_ batch dimensions.
@@ -191,7 +191,8 @@ def codegen_strided_linear(
             torch.zeros((batchdim, layout_in.dim)),
             torch.zeros((tuple() if shared_weights else (batchdim,)) + (w_index,)),
         )
-        graphmod_out = jitable(optimize_einsums_full(graphmod_out, example_inputs))
+        # graphmod_out = jitable(optimize_einsums_full(graphmod_out, example_inputs))
+        graphmod_out = optimize_einsums_full(graphmod_out, example_inputs)
 
     graphmod_out.weight_numel = w_index
     graphmod_out.dim_in = layout_in.base_dim
